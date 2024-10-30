@@ -6,3 +6,11 @@ scrape_configs:
       - targets: ['host.docker.internal:8080']
         labels:
           application: 'My Spring Boot Application'
+
+  - job_name: 'artemis'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['host.docker.internal:8161']
+        labels:
+          broker: 'artemis'

@@ -1,4 +1,4 @@
-package com.example.integration.configuration;
+package com.example.integration.integration;
 
 import java.io.File;
 
@@ -20,41 +20,31 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
-public class OutboundChannelAdapter {
+public class JmsOutbound {
 
     @Value("${xml.storage.path}")
     private String storagePath;
 
     private final FileService fileService;
+    private final DirectChannel errorChannel;
+    private final DirectChannel fileCleanupChannel;
 
     @Bean
     public IntegrationFlow jmsOutboundFlow(ActiveMQConnectionFactory connectionFactory) {
         return IntegrationFlow
                 .from(Files.inboundAdapter(new File(storagePath))
                                 .patternFilter("*.xml"),
-                        e -> e.poller(Pollers.fixedDelay(1000)))
-                .log(LoggingHandler.Level.INFO, "outbound.channel.adapter", m -> "Reading XML file: " + m)
+                        e -> e.poller(Pollers.fixedDelay(1000)
+                                .errorChannel(errorChannel)))
+                .log(LoggingHandler.Level.INFO, "jms.outbound.flow", m -> "Reading XML file: " + m)
                 .transform(Files.toStringTransformer())
-                .log(LoggingHandler.Level.INFO, "outbound.channel.adapter", m -> "XML payload: " + m)
+                .log(LoggingHandler.Level.INFO, "jms.outbound.flow", m -> "XML payload: " + m)
                 .transform(Message.class, fileService::transformXmlMessage)
-                .log(LoggingHandler.Level.INFO, "outbound.channel.adapter",
+                .log(LoggingHandler.Level.INFO, "jms.outbound.flow",
                         m -> "Sending to queue: " + m.getHeaders().get("jms_destination"))
                 .wireTap(p -> p.handle(Jms.outboundAdapter(connectionFactory)
                         .destinationExpression("headers.jms_destination")))
-                .channel("fileCleanupChannel")
-                .get();
-    }
-
-    @Bean
-    public DirectChannel fileCleanupChannel() {
-        return new DirectChannel();
-    }
-
-    @Bean
-    public IntegrationFlow fileCleanupFlow() {
-        return IntegrationFlow
-                .from("fileCleanupChannel")
-                .handle(fileService::archiveFile)
+                .channel(fileCleanupChannel)
                 .get();
     }
 }
