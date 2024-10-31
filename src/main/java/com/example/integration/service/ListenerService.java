@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Listener Service that listens on specific ActiveMQ queues for demonstration.
+ */
 @Slf4j
 @Service
 public class ListenerService {

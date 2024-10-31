@@ -1,7 +1,7 @@
 package com.example.integration.configuration;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.jms.JMSException;
+
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,11 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
+/**
+ * JMS Configuration class.
+ */
 @Configuration
 @EnableJms
 public class JmsConfig {

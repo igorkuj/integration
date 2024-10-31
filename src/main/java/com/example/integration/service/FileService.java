@@ -9,18 +9,21 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.example.integration.model.XmlMessage;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandlingException;
 import org.springframework.stereotype.Service;
 
+import com.example.integration.model.XmlMessage;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * File Service responsible for managing XML file operations.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

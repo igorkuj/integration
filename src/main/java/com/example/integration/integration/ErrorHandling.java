@@ -9,6 +9,9 @@ import org.springframework.messaging.MessagingException;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Error handling configuration for Integration flows.
+ */
 @Slf4j
 @Configuration
 public class ErrorHandling {

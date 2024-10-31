@@ -7,6 +7,9 @@ import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
+/**
+ * Retry configuration for Integration flows.
+ */
 @Configuration
 public class RetryConfig {
 

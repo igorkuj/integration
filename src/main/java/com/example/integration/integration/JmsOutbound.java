@@ -2,8 +2,6 @@ package com.example.integration.integration;
 
 import java.io.File;
 
-import com.example.integration.service.FileService;
-
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +14,16 @@ import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.jms.dsl.Jms;
 import org.springframework.messaging.Message;
 
+import com.example.integration.service.FileService;
+
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Integration Flow that polls a file directory for new files created by {@link FileService#saveXmlToFile}.
+ * It reads and converts the files, forwarding the messages to an ActiveMQ queue based on the <destination/> property.
+ * Upon successful completion, it invokes {@link FileCleanup#fileCleanupFlow} to archive the processed files.
+ * Uses {@link ErrorHandling#errorChannel} for error handling and {@link RetryConfig#retryAdvice} for retry configuration.
+ */
 @RequiredArgsConstructor
 @Configuration
 public class JmsOutbound {

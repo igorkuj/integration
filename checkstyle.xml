@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <!-- Files must end with a new line -->
+    <module name="NewlineAtEndOfFile">
+        <property name="fileExtensions" value="java"/>
+    </module>
+
+    <!-- Line length limit -->
+    <module name="LineLength">
+        <property name="max" value="140"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Class documentation requirement -->
+        <module name="MissingJavadocType">
+            <property name="skipAnnotations" value="SpringBootApplication"/>
+        </module>
+        <module name="JavadocStyle"/>
+
+        <!-- Import control -->
+        <module name="AvoidStarImport"/>
+        <module name="UnusedImports"/>
+        <module name="ImportOrder">
+            <property name="groups" value="java,jakarta,org,com,\#"/>
+            <property name="ordered" value="false"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="above"/>
+        </module>
+
+        <!-- Naming conventions -->
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="TypeName"/>
+        <module name="MemberName"/>
+
+        <!-- Code style -->
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+        <module name="NeedBraces"/>
+        <module name="EmptyBlock"/>
+        <module name="EqualsHashCode"/>
+        <module name="MissingSwitchDefault"/>
+
+        <!-- Whitespace rules -->
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+
+    </module>
+</module>

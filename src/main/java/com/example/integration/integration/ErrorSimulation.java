@@ -12,8 +12,15 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessagingException;
 
+import com.example.integration.controller.MessageController;
+
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * A class designed to simulate error handling in Spring Integration,
+ * utilizing ActiveMQ and JMS Inbound Gateway to return the appropriate message.
+ * Triggered by {@link MessageController#simulateErrorFlow()}.
+ */
 @Slf4j
 @Configuration
 public class ErrorSimulation {
