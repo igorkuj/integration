@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.jms.dsl.Jms;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -14,14 +15,11 @@ import org.springframework.messaging.MessagingException;
 
 import com.example.integration.controller.MessageController;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * A class designed to simulate error handling in Spring Integration,
  * utilizing ActiveMQ and JMS Inbound Gateway to return the appropriate message.
  * Triggered by {@link MessageController#simulateErrorFlow()}.
  */
-@Slf4j
 @Configuration
 public class ErrorSimulation {
 
@@ -57,6 +55,7 @@ public class ErrorSimulation {
         return IntegrationFlow
                 .from("requestChannel")
                 .transform(Message.class, this::handleMessage)
+                .log(LoggingHandler.Level.INFO, "error.simulation.flow", m -> "No error thrown!")
                 .channel("replyChannel")
                 .get();
     }
@@ -65,11 +64,8 @@ public class ErrorSimulation {
     public IntegrationFlow errorSimulationFlow() {
         return IntegrationFlow
                 .from("errorSimulationChannel")
-                .transform(message -> {
-                    String error = ((MessagingException) message).getCause().getMessage();
-                    log.error("Error occurred: {}", error);
-                    return error;
-                })
+                .transform(message -> ((MessagingException) message).getCause().getMessage())
+                .log(LoggingHandler.Level.INFO, "error.simulation.flow", m -> "Error occurred: " + m.getPayload())
                 .channel("replyChannel")
                 .get();
     }
