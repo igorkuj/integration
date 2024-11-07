@@ -43,30 +43,30 @@ public class ErrorSimulation {
         return IntegrationFlow
                 .from(Jms.inboundGateway(connectionFactory)
                         .requestDestination("errorSimulationQueue")
-                        .replyChannel("replyChannel")
-                        .errorChannel("errorSimulationChannel")
+                        .replyChannel(replyChannel())
+                        .errorChannel(errorSimulationChannel())
                 )
-                .channel("requestChannel")
+                .channel(requestChannel())
                 .get();
     }
 
     @Bean
     public IntegrationFlow processFlow() {
         return IntegrationFlow
-                .from("requestChannel")
+                .from(requestChannel())
                 .transform(Message.class, this::handleMessage)
                 .log(LoggingHandler.Level.INFO, "error.simulation.flow", m -> "No error thrown!")
-                .channel("replyChannel")
+                .channel(replyChannel())
                 .get();
     }
 
     @Bean
     public IntegrationFlow errorSimulationFlow() {
         return IntegrationFlow
-                .from("errorSimulationChannel")
+                .from(errorSimulationChannel())
                 .transform(message -> ((MessagingException) message).getCause().getMessage())
                 .log(LoggingHandler.Level.INFO, "error.simulation.flow", m -> "Error occurred: " + m.getPayload())
-                .channel("replyChannel")
+                .channel(replyChannel())
                 .get();
     }
 

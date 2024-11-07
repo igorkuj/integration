@@ -26,7 +26,7 @@ public class FileCleanup {
     @Bean
     public IntegrationFlow fileCleanupFlow() {
         return IntegrationFlow
-                .from("fileCleanupChannel")
+                .from(fileCleanupChannel())
                 .handle(fileService::archiveFile)
                 .get();
     }

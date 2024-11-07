@@ -3,7 +3,6 @@ package com.example.integration.integration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.http.dsl.Http;
@@ -49,10 +48,5 @@ public class HttpInbound {
                 .log(LoggingHandler.Level.INFO, "http.inbound.gateway", m -> "Payload after uppercase: " + m.getPayload())
                 .channel("httpReplyChannel")
                 .get();
-    }
-
-    @Bean
-    public DirectChannel httpReplyChannel() {
-        return new DirectChannel();
     }
 }
