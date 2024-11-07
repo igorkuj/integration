@@ -7,6 +7,8 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.http.dsl.Http;
 
+import com.example.integration.model.XmlMessage;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,8 +33,14 @@ public class HttpInbound {
         return IntegrationFlow
                 .from(Http.inboundChannelAdapter("/httpInboundAdapter")
                         .requestMapping(r -> r.methods(HttpMethod.POST))
-                        .requestPayloadType(String.class))
-                .handle(m -> log.info("HttpInboundAdapter received request: {}", m))
+                        .requestPayloadType(XmlMessage.class))
+                .log(LoggingHandler.Level.INFO, log.getName(), m -> "HttpInboundAdapter received request: " + m)
+                .log(LoggingHandler.Level.INFO, log.getName(), m -> "Routing to: " + ((XmlMessage) m.getPayload()).getDestination())
+                .route("payload['destination']",
+                    r -> r.suffix("Channel")
+                            .channelMapping("destinationA", "destinationA")
+                            .channelMapping("destinationB", "destinationB")
+                            .defaultOutputChannel("defaultChannel"))
                 .get();
     }
 
@@ -47,6 +55,30 @@ public class HttpInbound {
                 .transform(m -> String.valueOf(m).toUpperCase())
                 .log(LoggingHandler.Level.INFO, "http.inbound.gateway", m -> "Payload after uppercase: " + m.getPayload())
                 .channel("httpReplyChannel")
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow routedToDestinationAChannel() {
+        return IntegrationFlow
+                .from("destinationAChannel")
+                .handle(p -> log.info("Message successfully routed to destinationAChannel!"))
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow routedToDestinationBChannel() {
+        return IntegrationFlow
+                .from("destinationBChannel")
+                .handle(p -> log.info("Message successfully routed to destinationBChannel!"))
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow routedToDefaultChannel() {
+        return IntegrationFlow
+                .from("defaultChannel")
+                .handle(p -> log.info("Channel: {} not found, routed to default channel!", ((XmlMessage) p.getPayload()).getDestination()))
                 .get();
     }
 }
