@@ -3,13 +3,16 @@ package com.example.integration.integration.http;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.json.JsonbHttpMessageConverter;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.http.dsl.Http;
 
+import com.example.integration.configuration.XmlHttpMessageConverter;
 import com.example.integration.model.XmlMessage;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This class demonstrates the basic usage of Spring Integration's HTTP inbound adapters and gateways
@@ -25,15 +28,20 @@ import lombok.extern.slf4j.Slf4j;
  *    - Forwards the message to the replyChannel which the Gateway uses to send the response.
  */
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
 public class HttpInbound {
+
+    private final JsonbHttpMessageConverter jsonbHttpMessageConverter = new JsonbHttpMessageConverter();
+    private final XmlHttpMessageConverter xmlHttpMessageConverter;
 
     @Bean
     public IntegrationFlow httpInboundAdapter() {
         return IntegrationFlow
                 .from(Http.inboundChannelAdapter("/httpInboundAdapter")
                         .requestMapping(r -> r.methods(HttpMethod.POST))
-                        .requestPayloadType(XmlMessage.class))
+                        .requestPayloadType(XmlMessage.class)
+                        .messageConverters(jsonbHttpMessageConverter, xmlHttpMessageConverter))
                 .log(LoggingHandler.Level.INFO, log.getName(), m -> "HttpInboundAdapter received request: " + m)
                 .log(LoggingHandler.Level.INFO, log.getName(), m -> "Routing to: " + ((XmlMessage) m.getPayload()).getDestination())
                 .route("payload['destination']",
