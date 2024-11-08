@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.errors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

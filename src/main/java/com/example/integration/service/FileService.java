@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.support.MessageBuilder;
@@ -36,22 +34,6 @@ public class FileService {
     private String archivePath;
 
     private final XmlMapper xmlMapper;
-
-    public void saveXmlToFile(String xmlContent) {
-        String timestamp = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SSS"));
-
-        String filename = String.format("xml_message_%s.xml", timestamp);
-
-        try {
-            Path filePath = Paths.get(storagePath, filename);
-            Files.createDirectories(filePath.getParent());
-            Files.writeString(filePath, xmlContent);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save XML file: " + e.getMessage(), e);
-        }
-    }
 
     public Message<String> transformXmlMessage(Message<?> message) {
         String payload = String.valueOf(message.getPayload());

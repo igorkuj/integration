@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.http;
 
 import java.time.Duration;
 
@@ -36,19 +36,18 @@ public class HttpOutbound {
     @Bean
     public IntegrationFlow httpOutboundAdapter() {
         return IntegrationFlow
-                .from(this.newMessageSource(),
-                        p -> p.poller(Pollers.fixedDelay(Duration.ofMinutes(10), Duration.ofSeconds(5))))
+                .from(newMessageSource(),
+                        p -> p.poller(Pollers.fixedDelay(Duration.ofMinutes(10), Duration.ofSeconds(30))))
                 .log(LoggingHandler.Level.INFO, log.getName(), m -> "HttpOutboundAdapter sending request: " + m.getPayload())
-                .handle(Http
-                        .outboundChannelAdapter("http://localhost:8080/messages"))
+                .handle(Http.outboundChannelAdapter("http://localhost:8080/messages"))
                 .get();
     }
 
     @Bean
     public IntegrationFlow httpOutboundGateway() {
         return IntegrationFlow
-                .from(this.newMessageSource(),
-                        p -> p.poller(Pollers.fixedDelay(Duration.ofMinutes(1), Duration.ofSeconds(10))))
+                .from(newMessageSource(),
+                        p -> p.poller(Pollers.fixedDelay(Duration.ofMinutes(3), Duration.ofSeconds(45))))
                 .log(LoggingHandler.Level.INFO, log.getName(), m -> "HttpOutboundGateway sending request at: /messages/error ")
                 .handle(Http.outboundGateway("http://localhost:8080/messages/error")
                         .httpMethod(HttpMethod.GET)

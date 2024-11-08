@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.http;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 1. **HttpInboundAdapter Flow**:
  *    - Listens for POST requests at the `/httpInboundAdapter` endpoint
- *    - Logs the incoming request(handling logic should begin here)
+ *    - Routes message based on destination property
  * <p>
  * 2. **HttpInboundGateway Flow**:
  *    - Listens for POST requests at the `/httpInboundGateway` endpoint

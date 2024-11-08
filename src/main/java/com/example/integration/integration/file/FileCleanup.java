@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.file;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,6 +6,7 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 
 import com.example.integration.service.FileService;
+import com.example.integration.integration.jms.JmsOutbound;
 
 import lombok.RequiredArgsConstructor;
 

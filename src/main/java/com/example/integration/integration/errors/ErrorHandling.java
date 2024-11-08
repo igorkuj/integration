@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.errors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.messaging.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Error handling configuration for Integration flows.
+ * Default error handling configuration for Integration flows.
  */
 @Slf4j
 @Configuration

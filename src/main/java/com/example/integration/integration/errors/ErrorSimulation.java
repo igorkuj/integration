@@ -1,4 +1,4 @@
-package com.example.integration.integration;
+package com.example.integration.integration.errors;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,13 +15,18 @@ import org.springframework.messaging.MessagingException;
 
 import com.example.integration.controller.MessageController;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * A class designed to simulate error handling in Spring Integration,
  * utilizing ActiveMQ and JMS Inbound Gateway to return the appropriate message.
  * Triggered by {@link MessageController#simulateErrorFlow()}.
  */
+@RequiredArgsConstructor
 @Configuration
 public class ErrorSimulation {
+
+    private final ActiveMQConnectionFactory connectionFactory;
 
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -39,7 +44,7 @@ public class ErrorSimulation {
     }
 
     @Bean
-    public IntegrationFlow inboundGatewayFlow(ActiveMQConnectionFactory connectionFactory) {
+    public IntegrationFlow inboundGatewayFlow() {
         return IntegrationFlow
                 .from(Jms.inboundGateway(connectionFactory)
                         .requestDestination("errorSimulationQueue")
